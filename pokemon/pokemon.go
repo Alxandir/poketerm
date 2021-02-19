@@ -68,6 +68,7 @@ func RandomNumber(min int, max int) int {
 }
 
 func (p Pokemon) GetAccuracyModifier() float64 {
+	// https://bulbapedia.bulbagarden.net/wiki/Stat#Stage_multipliers
 	if p.accuracyStage >= 0 {
 		return (3.0 + float64(p.accuracyStage)) / 3.0
 	}
@@ -75,6 +76,7 @@ func (p Pokemon) GetAccuracyModifier() float64 {
 }
 
 func (p Pokemon) GetEvasivenesssModifier() float64 {
+	// https://bulbapedia.bulbagarden.net/wiki/Stat#Stage_multipliers
 	if p.evasivenessStage <= 0 {
 		// 3/3 4/3 5/3
 		return (3.0 + float64(p.accuracyStage)) / 3.0
@@ -163,8 +165,8 @@ func (p Pokemon) GetDefence() uint {
 }
 
 func (p *Pokemon) ReceiveAttack(attacker Pokemon, attack Attack) (bool, float64) {
-	accuracy := float64(attack.GetAccuracy()) * attacker.GetAccuracyModifier() * p.GetEvasivenesssModifier()
-	term.ShowNoWaitDialog("Accuracy: %.2f", accuracy)
+	// https://bulbapedia.bulbagarden.net/wiki/Accuracy
+	accuracy := float64(attack.GetAccuracyValue()) * attacker.GetAccuracyModifier() * p.GetEvasivenesssModifier()
 	hit := RandomNumber(0, 255) < int(math.Round(accuracy))
 	if !hit {
 		return false, 1.0
@@ -187,8 +189,9 @@ func (p *Pokemon) ReceiveAttack(attacker Pokemon, attack Attack) (bool, float64)
 			break
 		}
 	}
+	// https://bulbapedia.bulbagarden.net/wiki/Damage
 	damage := ((((((2.0 * float64(attacker.level)) / 5.0) + 2.0) * float64(attack.power) * (A / D)) / 50.0) + 2.0) * typeEffect * attackerTypeBonus
-	term.ShowNoResponseDialog("Damage: %v", damage)
+	// term.ShowNoResponseDialog("Damage: %.2f", damage)
 	damageInt := uint(math.Round(damage))
 	if p.GetHP() <= damageInt {
 		p.hpReduction = p.GetMaxHP()

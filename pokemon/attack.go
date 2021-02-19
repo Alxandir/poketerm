@@ -49,7 +49,7 @@ func (attack Attack) GetAttackSummaryString(spacer string, prefix string) (outpu
 	return
 }
 
-func (attack Attack) GetAccuracy() uint {
+func (attack Attack) GetAccuracyValue() uint {
 	return 255 * attack.accuracy
 }
 

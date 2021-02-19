@@ -120,7 +120,7 @@ var Pokedex = []PokedexItem{
 			Poison{},
 		},
 	},
-	{
+	{ // https://bulbapedia.bulbagarden.net/wiki/Charmander
 		id:            4,
 		name:          "Charmander",
 		baseLevel:     1,
@@ -209,7 +209,7 @@ var Pokedex = []PokedexItem{
 			Water{},
 		},
 	},
-	{
+	{ // https://bulbapedia.bulbagarden.net/wiki/Caterpie
 		id:            10,
 		name:          "Caterpie",
 		baseLevel:     1,
