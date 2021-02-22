@@ -88,7 +88,7 @@ func (b *battle) PlayRound() (battleOver bool) {
 	attack := attacks[index-1]
 	term.ShowNoResponseDialog("\t%v used %v...", b.activePlayerPokemon.GetName(), attack.GetName())
 	b.activePlayerPokemon.UseAttack(index - 1)
-	hit, effectiveness := b.activeOpponentPokemon.ReceiveAttack(*b.activePlayerPokemon, attack.GetAttack())
+	hit, effectiveness, stageModifications := b.activeOpponentPokemon.ReceiveAttack(b.activePlayerPokemon, attack.GetAttack())
 	if hit {
 		switch {
 		case effectiveness > 1.0:
@@ -101,6 +101,9 @@ func (b *battle) PlayRound() (battleOver bool) {
 	}
 	if !hit {
 		term.ShowNoResponseDialog("\tIt missed")
+	}
+	for _, stageMstageModification := range stageModifications {
+		term.ShowNoResponseDialog(stageMstageModification)
 	}
 	if b.activeOpponentPokemon.GetHP() <= 0 {
 		term.ShowNoResponseDialog("%v fainted", b.activeOpponentPokemon.GetName())

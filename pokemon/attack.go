@@ -5,6 +5,16 @@ import (
 	"fmt"
 )
 
+const (
+	STAGE_MODIFIER_ATTACK      = "attack"
+	STAGE_MODIFIER_DEFENCE     = "defence"
+	STAGE_MODIFIER_SP_ATTACK   = "special attack"
+	STAGE_MODIFIER_SP_DEFENCE  = "special defence"
+	STAGE_MODIFIER_SPEED       = "speed"
+	STAGE_MODIFIER_ACCURACY    = "accuracy"
+	STAGE_MODIFIER_EVASIVENESS = "evasiveness"
+)
+
 type Attack struct {
 	id         uint
 	name       string
@@ -13,12 +23,20 @@ type Attack struct {
 	power      int
 	special    bool
 	accuracy   uint
+	modifiers  []AttackStageModifier
 }
 
 type PokemonAttack struct {
 	attack Attack
 	pp     uint
 	basePP uint
+}
+
+type AttackStageModifier struct {
+	stageType    string
+	modifyAmount int
+	toSelf       bool
+	chance       uint
 }
 
 func (pAttack PokemonAttack) GetName() string {
@@ -31,9 +49,10 @@ func (pAttack PokemonAttack) GetAttackSummaryString(spacer string, prefix string
 	output += prefix
 	output += pAttack.attack.name + "\n"
 	output += spacer
-	output += "\tType: " + pAttack.attack.attackType.GetName() + "\n"
+	output += "\tType: " + pAttack.attack.attackType.GetName() + fmt.Sprintf("\tPP: %v\n", pAttack.basePP)
 	output += spacer
-	output += fmt.Sprintf("\tPP: %v", pAttack.basePP)
+	output += fmt.Sprintf("\tPower: %v\tAccuracy: %v", pAttack.attack.power, pAttack.attack.accuracy)
+	output += "%%"
 	return
 }
 
@@ -43,9 +62,10 @@ func (attack Attack) GetAttackSummaryString(spacer string, prefix string) (outpu
 	output += prefix
 	output += attack.name + "\n"
 	output += spacer
-	output += "\tType: " + attack.attackType.GetName() + "\n"
+	output += "\tType: " + attack.attackType.GetName() + fmt.Sprintf("\tPP: %v\n", attack.basePP)
 	output += spacer
-	output += fmt.Sprintf("\tPP: %v", attack.basePP)
+	output += fmt.Sprintf("\tPower: %v\tAccuracy: %v", attack.power, attack.accuracy)
+	output += "%%"
 	return
 }
 
@@ -139,6 +159,13 @@ var Attacks = []Attack{
 		basePP:     30,
 		power:      0,
 		accuracy:   100,
+		modifiers: []AttackStageModifier{
+			{
+				stageType:    STAGE_MODIFIER_ACCURACY,
+				modifyAmount: -1,
+				chance:       100,
+			},
+		},
 	},
 	{
 		id:         6,

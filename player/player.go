@@ -2,6 +2,7 @@ package player
 
 import (
 	"github.com/alxandir/poketerm/pokemon"
+	"github.com/alxandir/poketerm/term"
 )
 
 type Player struct {
@@ -32,6 +33,7 @@ func (p *Player) removeMoney(amount float64) (canAfford bool) {
 
 func (p *Player) AddPokemonToParty(pokemn *pokemon.Pokemon) {
 	p.pokemonParty = append(p.pokemonParty, pokemn)
+	term.ShowNoResponseDialog("\n\t%v was added to %v's party!", pokemn.GetName(), p.GetName())
 }
 
 func (p Player) GetPokemon() []*pokemon.Pokemon {

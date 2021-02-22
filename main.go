@@ -12,15 +12,17 @@ import (
 
 func main() {
 	term.PrettyPrint("Pokemon.txt")
-	response := term.ShowInputDialog("\nHi there! What's your name?")
-	user := player.New(response, player.GenderMale{})
+	playerName := term.ShowInputDialog("\nHi there! What's your name?")
+	playerGender := player.DisplayGenderChoice()
+	term.ShowNoResponseDialog("\nGreat, so you're a %v!", playerGender.GetName())
+	user := player.New(playerName, playerGender)
 	starters := pokemon.GetStarterPokemon()
 	choiceString := "\nI have some little critters for you to take a look at!"
 	for index, starter := range starters {
 		choiceString += fmt.Sprintf("\n\t(%v) %v", index+1, starter.GetName())
 	}
 	choiceString += "\nWhich of these pokemon takes your fancy?"
-	response = term.ShowInputDialogValidated(validateStarterChoice(starters), choiceString)
+	response := term.ShowInputDialogValidated(validateStarterChoice(starters), choiceString)
 	index, _ := strconv.Atoi(response)
 	chosenStarter := starters[index-1]
 
@@ -31,7 +33,6 @@ func main() {
 	}
 
 	user.AddPokemonToParty(&chosenStarter)
-	term.ShowNoResponseDialog("\n\t%v was added to your %v's party!", chosenStarter.GetName(), user.GetName())
 	chosenStarter.Nerf()
 	enemyPokemon, _ := pokemon.New(10, "", 4)
 	enemyPokemon2, _ := pokemon.New(1, "", 6)

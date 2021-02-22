@@ -10,7 +10,7 @@ type PokedexItem struct {
 	baseDefence   uint
 	baseSpAttack  uint
 	baseSpDefence uint
-	baseAccuracy  uint
+	baseSpeed     uint
 	types         []ElemenalType
 	attacks       []PokedexItemAttack
 }
@@ -130,6 +130,7 @@ var Pokedex = []PokedexItem{
 		baseDefence:   43,
 		baseSpAttack:  60,
 		baseSpDefence: 50,
+		baseSpeed:     65,
 		types: []ElemenalType{
 			Fire{},
 		},
@@ -149,7 +150,7 @@ var Pokedex = []PokedexItem{
 			},
 			{
 				attack:   Attacks[4],
-				minLevel: 6,
+				minLevel: 5,
 			},
 		},
 	},
@@ -219,6 +220,7 @@ var Pokedex = []PokedexItem{
 		baseDefence:   35,
 		baseSpAttack:  20,
 		baseSpDefence: 20,
+		baseSpeed:     45,
 		types: []ElemenalType{
 			Bug{},
 		},
