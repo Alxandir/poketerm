@@ -24,6 +24,9 @@ func (Fire) GetName() string {
 func (Fire) Weaknesses() map[string]float64 {
 	return map[string]float64{
 		"water": 2.0,
+		"bug":   0.5,
+		"ice":   0.5,
+		"rock":  2.0,
 	}
 }
 
@@ -34,7 +37,9 @@ func (Water) GetName() string {
 }
 func (Water) Weaknesses() map[string]float64 {
 	return map[string]float64{
-		"water": 2.0,
+		"grass": 2.0,
+		"ice":   2.0,
+		"rock":  0.5,
 	}
 }
 
@@ -50,6 +55,7 @@ func (Grass) Weaknesses() map[string]float64 {
 		"ice":    2.0,
 		"poison": 2.0,
 		"bug":    2.0,
+		"water":  0.5,
 	}
 }
 

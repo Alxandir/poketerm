@@ -25,6 +25,8 @@ func main() {
 	response := term.ShowInputDialogValidated(validateStarterChoice(starters), choiceString)
 	index, _ := strconv.Atoi(response)
 	chosenStarter := starters[index-1]
+	opponentPokemon := starters[index%len(starters)]
+	helperPokemon := starters[(index+1)%len(starters)]
 
 	response = term.ShowInputDialog("\nGreat choice %v! Would you like to give %v a nickname?", user.GetName(), chosenStarter.GetName())
 	if term.UserAccepted(response) {
@@ -33,12 +35,10 @@ func main() {
 	}
 
 	user.AddPokemonToParty(&chosenStarter)
-	chosenStarter.Nerf()
-	enemyPokemon, _ := pokemon.New(10, "", 4)
-	enemyPokemon2, _ := pokemon.New(1, "", 6)
-	b := battle.New(64.5, &user, []*pokemon.Pokemon{&enemyPokemon, &enemyPokemon2})
+	term.ShowNoResponseDialog("\nThis battle will be tougher than you think, so I'll have %v here help you out!", helperPokemon.GetName())
+	user.AddPokemonToParty(&helperPokemon)
+	b := battle.New(64.5, &user, []*pokemon.Pokemon{&opponentPokemon})
 	b.Perform()
-	term.ShowNoResponseDialog("\n\n%#v", user)
 }
 
 func validateStarterChoice(starters []pokemon.Pokemon) func(string) string {

@@ -20,7 +20,7 @@ type Attack struct {
 	name       string
 	attackType ElemenalType
 	basePP     uint
-	power      int
+	power      uint
 	special    bool
 	accuracy   uint
 	modifiers  []AttackStageModifier
@@ -41,6 +41,10 @@ type AttackStageModifier struct {
 
 func (pAttack PokemonAttack) GetName() string {
 	return pAttack.attack.name
+}
+
+func (attack Attack) GetName() string {
+	return attack.name
 }
 
 func (pAttack PokemonAttack) GetAttackSummaryString(spacer string, prefix string) (output string) {
@@ -70,7 +74,11 @@ func (attack Attack) GetAttackSummaryString(spacer string, prefix string) (outpu
 }
 
 func (attack Attack) GetAccuracyValue() uint {
-	return 255 * attack.accuracy
+	return 255 * (attack.accuracy / 100)
+}
+
+func (attack Attack) GetPower() uint {
+	return attack.power
 }
 
 func (pAttack PokemonAttack) GetAttackString(prefix string) (output string) {
@@ -87,6 +95,10 @@ func (pAttack PokemonAttack) GetPP() uint {
 
 func (pAttack PokemonAttack) GetAttack() Attack {
 	return pAttack.attack
+}
+
+func (pAttack PokemonAttack) GetType() ElemenalType {
+	return pAttack.attack.attackType
 }
 
 func NewAttack(attackId uint) (pAttack PokemonAttack, err error) {
@@ -116,6 +128,7 @@ var BasicSandAttack = PokedexItemAttack{
 	attack:   Attacks[4],
 	minLevel: 1,
 }
+var Struggle = Attacks[7]
 
 var Attacks = []Attack{
 	{
@@ -181,6 +194,14 @@ var Attacks = []Attack{
 		attackType: Normal{},
 		basePP:     15,
 		power:      30,
+		accuracy:   100,
+	},
+	{
+		id:         8,
+		name:       "Struggle",
+		attackType: Normal{},
+		basePP:     15,
+		power:      0,
 		accuracy:   100,
 	},
 }

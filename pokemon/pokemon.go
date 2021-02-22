@@ -74,30 +74,86 @@ func RandomNumber(min int, max int) int {
 }
 
 func (p *Pokemon) SetAccuracyStage(newValue int) {
+	if newValue > 6 {
+		p.accuracyStage = 6
+		return
+	}
+	if newValue < -6 {
+		p.accuracyStage = -6
+		return
+	}
 	p.accuracyStage = newValue
 }
 
 func (p *Pokemon) SetEvasivenessStage(newValue int) {
+	if newValue > 6 {
+		p.evasivenessStage = 6
+		return
+	}
+	if newValue < -6 {
+		p.evasivenessStage = -6
+		return
+	}
 	p.evasivenessStage = newValue
 }
 
 func (p *Pokemon) SetAttackStage(newValue int) {
+	if newValue > 6 {
+		p.attackStage = 6
+		return
+	}
+	if newValue < -6 {
+		p.attackStage = -6
+		return
+	}
 	p.attackStage = newValue
 }
 
 func (p *Pokemon) SetDefenceStage(newValue int) {
+	if newValue > 6 {
+		p.defenceStage = 6
+		return
+	}
+	if newValue < -6 {
+		p.defenceStage = -6
+		return
+	}
 	p.defenceStage = newValue
 }
 
 func (p *Pokemon) SetSpAttackStage(newValue int) {
+	if newValue > 6 {
+		p.spAttackStage = 6
+		return
+	}
+	if newValue < -6 {
+		p.spAttackStage = -6
+		return
+	}
 	p.spAttackStage = newValue
 }
 
 func (p *Pokemon) SetSpDefenceStage(newValue int) {
+	if newValue > 6 {
+		p.spDefenceStage = 6
+		return
+	}
+	if newValue < -6 {
+		p.spDefenceStage = -6
+		return
+	}
 	p.spDefenceStage = newValue
 }
 
 func (p *Pokemon) SetSpeedStage(newValue int) {
+	if newValue > 6 {
+		p.speedStage = 6
+		return
+	}
+	if newValue < -6 {
+		p.speedStage = -6
+		return
+	}
 	p.speedStage = newValue
 }
 
@@ -251,6 +307,24 @@ func (p Pokemon) GetAdjustedSpeed() float64 {
 	return float64(p.speed+p.pokedexItem.baseSpeed) * p.getSpeedModifier()
 }
 
+func (p Pokemon) GetAttackTypeBonus(attack Attack) float64 {
+	attackType := attack.attackType.GetName()
+	for _, attackerType := range p.pokedexItem.types {
+		if attackerType.GetName() == attackType {
+			return 1.5
+		}
+	}
+	return 1.0
+}
+
+func (p Pokemon) GetAttackEffectiveness(attack Attack) float64 {
+	typeWeaknesses := p.GetWeaknesses()
+	if _, ok := typeWeaknesses[attack.attackType.GetName()]; ok {
+		return typeWeaknesses[attack.attackType.GetName()]
+	}
+	return 1.0
+}
+
 func (p *Pokemon) ReceiveAttack(attacker *Pokemon, attack Attack) (bool, float64, []string) {
 	// https://bulbapedia.bulbagarden.net/wiki/Accuracy
 	accuracy := float64(attack.GetAccuracyValue()) * attacker.GetAccuracyModifier() * p.GetEvasivenesssModifier()
@@ -264,22 +338,13 @@ func (p *Pokemon) ReceiveAttack(attacker *Pokemon, attack Attack) (bool, float64
 		A = attacker.GetAdjustedSpecialAttack()
 		D = p.GetAdjustedSpecialDefence()
 	}
-	typeWeaknesses := p.GetWeaknesses()
-	typeEffect := 1.0
-	attackerTypeBonus := 1.0
-	if _, ok := typeWeaknesses[attack.attackType.GetName()]; ok {
-		typeEffect = typeWeaknesses[attack.attackType.GetName()]
-	}
-	for _, attackerType := range attacker.pokedexItem.types {
-		if attackerType.GetName() == attack.attackType.GetName() {
-			attackerTypeBonus = 1.5
-			break
-		}
-	}
+	effectiveness := p.GetAttackEffectiveness(attack)
+	attackerTypeBonus := attacker.GetAttackTypeBonus(attack)
+
 	// https://bulbapedia.bulbagarden.net/wiki/Damage
 	damage := 0.0
 	if attack.power > 0 {
-		damage = ((((((2.0 * float64(attacker.level)) / 5.0) + 2.0) * float64(attack.power) * (A / D)) / 50.0) + 2.0) * typeEffect * attackerTypeBonus
+		damage = ((((((2.0 * float64(attacker.level)) / 5.0) + 2.0) * float64(attack.power) * (A / D)) / 50.0) + 2.0) * effectiveness * attackerTypeBonus
 	}
 	// term.ShowNoResponseDialog("Damage: %.2f", damage)
 	damageInt := uint(math.Round(damage))
@@ -289,9 +354,12 @@ func (p *Pokemon) ReceiveAttack(attacker *Pokemon, attack Attack) (bool, float64
 	} else {
 		p.hpReduction += damageInt
 		stageModificationStrings = PerformStageModifications(attack, attacker, p)
+		if damageInt == 0 && len(stageModificationStrings) == 0 {
+			effectiveness = 0
+		}
 	}
 
-	return true, typeEffect, stageModificationStrings
+	return true, effectiveness, stageModificationStrings
 }
 
 func PerformStageModifications(attack Attack, attacker *Pokemon, defender *Pokemon) (stageModificationStrings []string) {

@@ -79,11 +79,12 @@ var Pokedex = []PokedexItem{
 		name:          "Bulbasaur",
 		baseLevel:     1,
 		evolutionId:   2,
-		baseHP:        39,
-		baseAttack:    52,
-		baseDefence:   43,
-		baseSpAttack:  60,
-		baseSpDefence: 50,
+		baseHP:        45,
+		baseAttack:    49,
+		baseDefence:   49,
+		baseSpAttack:  65,
+		baseSpDefence: 65,
+		baseSpeed:     45,
 		types: []ElemenalType{
 			Grass{},
 			Poison{},
@@ -93,7 +94,7 @@ var Pokedex = []PokedexItem{
 			BasicSandAttack,
 			{
 				attack:   Attacks[3],
-				minLevel: 6,
+				minLevel: 4,
 			},
 			{
 				attack:   Attacks[5],
@@ -177,11 +178,12 @@ var Pokedex = []PokedexItem{
 		name:          "Squirtle",
 		baseLevel:     1,
 		evolutionId:   8,
-		baseHP:        39,
-		baseAttack:    52,
-		baseDefence:   43,
-		baseSpAttack:  60,
-		baseSpDefence: 50,
+		baseHP:        44,
+		baseAttack:    48,
+		baseDefence:   65,
+		baseSpAttack:  50,
+		baseSpDefence: 64,
+		baseSpeed:     43,
 		types: []ElemenalType{
 			Water{},
 		},
@@ -223,6 +225,17 @@ var Pokedex = []PokedexItem{
 		baseSpeed:     45,
 		types: []ElemenalType{
 			Bug{},
+		},
+		attacks: []PokedexItemAttack{
+			BasicTackle,
+			{
+				attack:   Attacks[5],
+				minLevel: 1,
+			},
+			{
+				attack:   Attacks[6],
+				minLevel: 1,
+			},
 		},
 	},
 	{
